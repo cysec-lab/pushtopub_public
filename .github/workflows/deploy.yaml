@@ -17,6 +17,7 @@ jobs:
           repository: cysec-lab/ryusei_private
           token: ${{ steps.generate_token.outputs.token }}
           path: src
+          ref: ${{ github.head_ref }}
       - run: |
           pwd
           ls -la
