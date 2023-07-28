@@ -12,12 +12,13 @@ jobs:
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
+      - run: |
+          git config --global init.defaultBranch main
       - uses: actions/checkout@v3
         with:
           repository: cysec-lab/ryusei_private
           token: ${{ steps.generate_token.outputs.token }}
           path: src
-          ref: ${{ github.head_ref }}
       - run: |
           pwd
           ls -la
