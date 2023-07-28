@@ -8,8 +8,6 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          git config --global init.defaultBranch main
       - uses: actions/checkout@v3
         with:
           repository: cysec-lab/ryusei_private
