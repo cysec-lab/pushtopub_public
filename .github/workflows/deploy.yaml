@@ -12,17 +12,12 @@ jobs:
         with:
           app_id: ${{ secrets.APP_ID }}
           private_key: ${{ secrets.PRIVATE_KEY }}
-      - name: Output token
-        env:
-          TOKEN: ${{ steps.generate_token.outputs.token }}
-        run: |
-          echo "Access Token: ${TOKEN:4}"
       - uses: actions/checkout@v3
-      - name: Checkout tools repo
-        uses: actions/checkout@v3
         with:
           repository: cysec-lab/ryusei_private
+          token: ${{ steps.generate_token.outputs.token }}
           path: src
       - run: |
           pwd
           ls -la
+          ls -la src
