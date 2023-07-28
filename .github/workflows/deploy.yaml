@@ -16,10 +16,9 @@ jobs:
           git config --global init.defaultBranch main
       - uses: actions/checkout@v3
         with:
-          repository: cysec-lab/ryusei_private
+          repository: cysec-lab/ryusei_private@main
           token: ${{ steps.generate_token.outputs.token }}
           path: src
-          fetch-depth: 2
       - run: |
           pwd
           ls -la
