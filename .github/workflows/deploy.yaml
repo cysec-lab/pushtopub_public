@@ -3,6 +3,8 @@ on: [push]
 
 jobs:
   deploy:
+    permissions:
+      contents: read
     name: Deploy
     runs-on: ubuntu-latest
     steps:
