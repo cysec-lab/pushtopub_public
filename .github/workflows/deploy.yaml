@@ -14,20 +14,21 @@ jobs:
           path: private
           ref: "main"
 
-      - name: Setup Git
+      - name: Move private files
         run: |
-          git config --global user.name "actions-user"
-          git config --global user.email "action@github.com"
-      - name: Commit and Push
-        continue-on-error: true
-        run: |
-          ls -a | grep -v -E '^private$|^\.git$|^\.github$' | xargs rm -rf
+          ls -a | grep -v -E '^\.$|^\.\.$|^private$|^\.git$|^\.github$' | xargs rm -rf
           echo "===3==="
           ls -a
           ls -d private/* private/.* | grep -v -E '^private/\.$|^private/\.\.$|^private/\.git$|^private/\.github$' | xargs -i mv {} .
           echo "===4==="
           ls -a
           rm -rf private
+
+      - name: Commit and Push
+        continue-on-error: true
+        run: |
+          git config --global user.name "actions-user"
+          git config --global user.email "action@github.com"
           git add .
           git commit -m "deploy: ${{ github.sha }}"
           git push origin main
