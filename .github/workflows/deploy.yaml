@@ -9,7 +9,7 @@ jobs:
       - uses: actions/checkout@v3 # checkout this repo
       - uses: actions/checkout@v3 # checkout other private repo
         with:
-          repository: cysec-lab/ryusei_private
+          repository: cysec-lab/pushtopub_private
           token: ${{ secrets.ORG_GITHUB_PAT }}
           path: private
           ref: "main"
@@ -17,11 +17,7 @@ jobs:
       - name: Move private files
         run: |
           ls -a | grep -v -E '^\.$|^\.\.$|^private$|^\.git$|^\.github$' | xargs rm -rf
-          echo "===3==="
-          ls -a
           ls -d private/* private/.* | grep -v -E '^private/\.$|^private/\.\.$|^private/\.git$|^private/\.github$' | xargs -i mv {} .
-          echo "===4==="
-          ls -a
           rm -rf private
 
       - name: Commit and Push
@@ -52,7 +48,7 @@ jobs:
 
       - name: Change Vite basepath
         run: |
-          sed -i 's/base: "."/base: "ryusei_public"/g' vite.config.ts
+          sed -i 's/base: "."/base: "pushtopub_public"/g' vite.config.ts
 
       - name: Build
         run: yarn build
