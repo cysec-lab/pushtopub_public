@@ -5,9 +5,6 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: private
     steps:
       - uses: actions/checkout@v3
       - run: |
@@ -23,12 +20,14 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
+          working-directory: private
           node-version: 18
 
       - name: Cache node_modules
         id: node_modules_cache_id
         uses: actions/cache@v3
         with:
+          working-directory: private
           path: node_modules
           key: node-v${{ matrix.node-version }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
       - name: Install Dependencies
@@ -36,24 +35,28 @@ jobs:
 
       - name: Lint
         run: yarn lint
+        with:
+          working-directory: private
 
       - name: Change Vite basepath
         run: |
           sed -i 's/base: "."/base: "ryusei_public"/g' vite.config.ts
+        with:
+          working-directory: private
 
       - name: Build
         run: yarn build
+        with:
+          working-directory: private
 
+      - run: |
+          ls -Ra
       - name: Setup Git
         run: |
           git config --global user.name "actions-user"
           git config --global user.email "action@github.com"
-      - run: |
-          cd ..
-          ls -Ra
       - name: Commit and Push
         run: |
-          cd ..
           ls | grep -v -E 'private' | xargs rm -rf
           ls -ad private/* | grep -v -E 'private/.git|private/.github' | xargs -i mv {} .
           rm -rf private
@@ -61,9 +64,8 @@ jobs:
           git commit -m "deploy: ${{ github.sha }}"
           git push origin main
 
-
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: private/dist
+          publish_dir: dist
