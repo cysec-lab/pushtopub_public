@@ -1,9 +1,5 @@
 name: Deploy
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+on: [workflow_dispatch]
 
 
 jobs:
@@ -41,6 +37,10 @@ jobs:
       
       - name: Lint
         run: yarn lint
+
+      - name: change Vite basepath
+        run: |
+          sed -i '' 's/base: "."/base: "ryusei_public"/g' vite.config.ts 
 
       - name: Build
         run: yarn build
