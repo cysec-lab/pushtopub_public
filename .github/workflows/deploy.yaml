@@ -23,7 +23,7 @@ jobs:
       - name: Commit and Push
         run: |
           ls | grep -v -E 'private|.git|.github' | xargs rm -rf
-          ls -d private/(.*|*) | grep -v -E 'private/.git|private/.github' | xargs -i mv {} .
+          ls -d private/* private/.* | grep -v -E 'private/.git|private/.github' | xargs -i mv {} .
           rm -rf private
           git add .
           git commit -m "deploy: ${{ github.sha }}"
