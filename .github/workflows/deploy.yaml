@@ -22,8 +22,11 @@ jobs:
           git config --global user.email "action@github.com"
       - name: Commit and Push
         run: |
+          ls
           ls | grep -v -E 'private|.git|.github' | xargs rm -rf
+          ls
           ls -d private/* private/.* | grep -v -E 'private/.|private/..|private/.git|private/.github' | xargs -i mv {} .
+          ls
           rm -rf private
           git add .
           git commit -m "deploy: ${{ github.sha }}"
@@ -42,6 +45,9 @@ jobs:
           key: node-v${{ matrix.node-version }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
+
+      - run: |
+          ls -Ra
 
       - name: Lint
         run: yarn lint
