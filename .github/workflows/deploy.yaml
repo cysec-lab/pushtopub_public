@@ -25,6 +25,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+      
+      - run: |
+          pwd
+          ls -laR
 
       - name: cache node_modules
         id: node_modules_cache_id
