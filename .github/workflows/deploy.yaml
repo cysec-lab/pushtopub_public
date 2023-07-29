@@ -9,6 +9,7 @@ jobs:
       run:
         working-directory: private
     steps:
+      - uses: actions/checkout@v3
       - run: |
           cd ..
           ls -Ra
