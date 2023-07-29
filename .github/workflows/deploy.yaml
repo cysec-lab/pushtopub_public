@@ -19,10 +19,16 @@ jobs:
           git config --global user.email "action@github.com"
       - name: Commit and Push
         run: |
+          pwd
+          echo "===1==="
           ls -a
+          echo "===2==="
+          ls -a public/
           ls | grep -v -E 'private|.git|.github' | xargs rm -rf
+          echo "===3==="
           ls -a
           ls -d private/* private/.* | grep -v -E 'private/\.$|private/\.\.$|private/\.git|private/\.github' | xargs -i mv {} .
+          echo "===4==="
           ls -a
           rm -rf private
           git add .
