@@ -35,7 +35,7 @@ jobs:
 
       - name: Change Vite basepath
         run: |
-          sed -i '' 's/base: "."/base: "ryusei_public"/g' vite.config.ts
+          sed -i 's/base: "."/base: "ryusei_public"/g' vite.config.ts
 
       - name: Build
         run: yarn build
