@@ -5,10 +5,14 @@ on:
       - main
   workflow_dispatch:
 
+
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: private
     steps:
       - uses: actions/checkout@v3
         with:
@@ -16,7 +20,29 @@ jobs:
           token: ${{ secrets.ORG_GITHUB_PAT }}
           path: .
           ref: 'main'
-      - run: |
-          pwd
-          ls -la
-          ls -la src
+
+      - name: setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-v${{ matrix.node-version }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      
+      - name: Lint
+        run: yarn lint
+
+      - name: Build
+        run: yarn build
+
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
