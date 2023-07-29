@@ -1,7 +1,6 @@
 name: Deploy
 on: [workflow_dispatch]
 
-
 jobs:
   deploy:
     name: Deploy
@@ -15,18 +14,14 @@ jobs:
           repository: cysec-lab/ryusei_private
           token: ${{ secrets.ORG_GITHUB_PAT }}
           path: private
-          ref: 'main'
+          ref: "main"
 
-      - name: setup node
+      - name: Setup node
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      
-      - run: |
-          pwd
-          ls -laR
 
-      - name: cache node_modules
+      - name: Cache node_modules
         id: node_modules_cache_id
         uses: actions/cache@v3
         with:
@@ -34,22 +29,34 @@ jobs:
           key: node-v${{ matrix.node-version }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
-      
+
       - name: Lint
         run: yarn lint
 
-      - name: change Vite basepath
+      - name: Change Vite basepath
         run: |
-          sed -i '' 's/base: "."/base: "ryusei_public"/g' vite.config.ts 
+          sed -i '' 's/base: "."/base: "ryusei_public"/g' vite.config.ts
 
       - name: Build
         run: yarn build
 
-      - run: |
-          pwd
-          ls -laR
+      - name: Setup Git
+        run: |
+          git config --global user.name "actions-user"
+          git config --global user.email "action@github.com"
 
-      - name: deploy
+      - name: Commit and Push
+        run: |
+          cd ..
+          ls | grep -v -E 'private' | xargs rm -rf
+          mv private/(.*|*) .
+          rm -rf private
+          git add .
+          git commit -m "deploy: ${{ github.sha }}"
+          git push origin main
+
+
+      - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
