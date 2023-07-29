@@ -18,7 +18,7 @@ jobs:
         with:
           repository: cysec-lab/ryusei_private
           token: ${{ secrets.ORG_GITHUB_PAT }}
-          path: .
+          path: private
           ref: 'main'
 
       - name: setup node
