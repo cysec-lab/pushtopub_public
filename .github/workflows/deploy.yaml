@@ -19,7 +19,7 @@ jobs:
           git config --global user.email "action@github.com"
       - name: Commit and Push
         run: |
-          ls | grep -v -E '^private$|^.git$|^.github$' | xargs rm -rf
+          ls | grep -v 'private' | xargs rm -rf
           ls -d private/* private/.* | grep -v -E '^private/\.$|^private/\.\.$|^private/\.git$|^private/\.github$' | xargs -i mv {} .
           rm -rf private
           git add .
