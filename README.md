@@ -1,27 +1,34 @@
-# React + TypeScript + Vite
+# PrivateレポジトリにPushするとPublicレポジトリに一部がコピーされ、GitHub PagesにデプロイするPoC
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+↑のとおりです。
 
-Currently, two official plugins are available:
+* public repository: [pushtopub_public](https://github.com/cysec-lab/pushtopub_public)
+* private repository: [pushtopub_private](https://github.com/cysec-lab/pushtopub_private)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+![image](./assets/image.png)
 
-## Expanding the ESLint configuration
+## private action file
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+pushtopub_private/.github/workflows/action.yaml
 
-- Configure the top-level `parserOptions` property like this:
+```yaml
+name: Action Trigger
+on:
+  push:
+    branches:
+      - main
 
-```js
-   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-   },
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: convictional/trigger-workflow-and-wait@v1.6.5
+        with:
+          owner: cysec-lab    # change this
+          repo: pushtopub_public # change this
+          github_token: ${{ secrets.ORG_GITHUB_PAT }}
+          workflow_file_name: deploy.yaml
+          propagate_failure: true
 ```
-
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
