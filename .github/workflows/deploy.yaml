@@ -7,9 +7,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - run: |
-          ls -Ra
-      - uses: actions/checkout@v3
         with:
           repository: cysec-lab/ryusei_private
           token: ${{ secrets.ORG_GITHUB_PAT }}
@@ -22,11 +19,8 @@ jobs:
           git config --global user.email "action@github.com"
       - name: Commit and Push
         run: |
-          ls
           ls | grep -v -E 'private|.git|.github' | xargs rm -rf
-          ls
           ls -d private/* private/.* | grep -v -E 'private/\.$|private/\.\.$|private/\.git|private/\.github' | xargs -i mv {} .
-          ls
           rm -rf private
           git add .
           git commit -m "deploy: ${{ github.sha }}"
@@ -46,9 +40,6 @@ jobs:
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
 
-      - run: |
-          ls -Ra
-
       - name: Lint
         run: yarn lint
 
@@ -58,9 +49,6 @@ jobs:
 
       - name: Build
         run: yarn build
-
-      - run: |
-          ls -Ra
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
