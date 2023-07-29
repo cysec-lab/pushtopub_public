@@ -20,9 +20,9 @@ jobs:
       - name: Commit and Push
         run: |
           ls -a
-          ls | grep -v 'private' | xargs rm -rf
+          ls | grep -v -E 'private|.git|.github' | xargs rm -rf
           ls -a
-          ls -d private/* private/.* | grep -v -E '^private/\.$|^private/\.\.$|^private/\.github$' | xargs -i mv {} .
+          ls -d private/* private/.* | grep -v -E 'private/\.$|private/\.\.$|private/\.git|private/\.github' | xargs -i mv {} .
           ls -a
           rm -rf private
           git add .
