@@ -17,40 +17,6 @@ jobs:
           path: private
           ref: "main"
 
-      - name: Setup node
-        uses: actions/setup-node@v3
-        with:
-          working-directory: private
-          node-version: 18
-
-      - name: Cache node_modules
-        id: node_modules_cache_id
-        uses: actions/cache@v3
-        with:
-          working-directory: private
-          path: node_modules
-          key: node-v${{ matrix.node-version }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Lint
-        run: yarn lint
-        with:
-          working-directory: private
-
-      - name: Change Vite basepath
-        run: |
-          sed -i 's/base: "."/base: "ryusei_public"/g' vite.config.ts
-        with:
-          working-directory: private
-
-      - name: Build
-        run: yarn build
-        with:
-          working-directory: private
-
-      - run: |
-          ls -Ra
       - name: Setup Git
         run: |
           git config --global user.name "actions-user"
@@ -63,6 +29,33 @@ jobs:
           git add .
           git commit -m "deploy: ${{ github.sha }}"
           git push origin main
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Cache node_modules
+        id: node_modules_cache_id
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: node-v${{ matrix.node-version }}-deps-${{ hashFiles(format('{0}{1}', github.workspace, '/yarn.lock')) }}
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Lint
+        run: yarn lint
+
+      - name: Change Vite basepath
+        run: |
+          sed -i 's/base: "."/base: "ryusei_public"/g' vite.config.ts
+
+      - name: Build
+        run: yarn build
+
+      - run: |
+          ls -Ra
 
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
