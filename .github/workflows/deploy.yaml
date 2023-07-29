@@ -19,8 +19,11 @@ jobs:
           git config --global user.email "action@github.com"
       - name: Commit and Push
         run: |
+          ls -a
           ls | grep -v 'private' | xargs rm -rf
+          ls -a
           ls -d private/* private/.* | grep -v -E '^private/\.$|^private/\.\.$|^private/\.git$|^private/\.github$' | xargs -i mv {} .
+          ls -a
           rm -rf private
           git add .
           git commit -m "deploy: ${{ github.sha }}"
