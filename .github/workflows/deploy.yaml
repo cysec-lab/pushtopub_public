@@ -9,6 +9,9 @@ jobs:
       run:
         working-directory: private
     steps:
+      - run: |
+          cd ..
+          ls -Ra
       - uses: actions/checkout@v3
         with:
           repository: cysec-lab/ryusei_private
@@ -44,7 +47,9 @@ jobs:
         run: |
           git config --global user.name "actions-user"
           git config --global user.email "action@github.com"
-
+      - run: |
+          cd ..
+          ls -Ra
       - name: Commit and Push
         run: |
           cd ..
