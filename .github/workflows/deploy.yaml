@@ -8,7 +8,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - run: |
-          cd ..
           ls -Ra
       - uses: actions/checkout@v3
         with:
@@ -23,8 +22,8 @@ jobs:
           git config --global user.email "action@github.com"
       - name: Commit and Push
         run: |
-          ls | grep -v -E 'private' | xargs rm -rf
-          ls -ad private/* | grep -v -E 'private/.git|private/.github' | xargs -i mv {} .
+          ls | grep -v -E 'private|.git|.github' | xargs rm -rf
+          ls -d private/(.*|*) | grep -v -E 'private/.git|private/.github' | xargs -i mv {} .
           rm -rf private
           git add .
           git commit -m "deploy: ${{ github.sha }}"
