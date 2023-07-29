@@ -25,7 +25,7 @@ jobs:
           ls
           ls | grep -v -E 'private|.git|.github' | xargs rm -rf
           ls
-          ls -d private/* private/.* | grep -v -E 'private/\.|private/\.\.|private/\.git|private/\.github' | xargs -i mv {} .
+          ls -d private/* private/.* | grep -v -E 'private/\.$|private/\.\.$|private/\.git|private/\.github' | xargs -i mv {} .
           ls
           rm -rf private
           git add .
